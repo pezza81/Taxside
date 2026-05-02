@@ -348,31 +348,31 @@ const LandingPage = ({ onGetStarted }) => {
           <div style={styles.footerLinks}>
             <div style={styles.footerColumn}>
               <h4 style={styles.footerColumnTitle}>Product</h4>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Features</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Pricing</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Demo</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Roadmap</a>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Features</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Pricing</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Demo</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Roadmap</button>
             </div>
             <div style={styles.footerColumn}>
               <h4 style={styles.footerColumnTitle}>Resources</h4>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Expense Library</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>HMRC Guides</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>MTD Explained</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Tax Calculator</a>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Expense Library</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>HMRC Guides</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>MTD Explained</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Tax Calculator</button>
             </div>
             <div style={styles.footerColumn}>
               <h4 style={styles.footerColumnTitle}>Company</h4>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>About</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Blog</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Careers</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Press</a>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>About</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Blog</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Careers</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Press</button>
             </div>
             <div style={styles.footerColumn}>
               <h4 style={styles.footerColumnTitle}>Legal</h4>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Privacy Policy</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Terms of Service</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Cookie Policy</a>
-              <a href="#" style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>GDPR</a>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Privacy Policy</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Terms of Service</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>Cookie Policy</button>
+              <button style={styles.footerLink} onMouseEnter={(e) => e.target.style.color = '#00D897'} onMouseLeave={(e) => e.target.style.color = 'rgba(249, 250, 251, 0.68)'}>GDPR</button>
             </div>
           </div>
 
