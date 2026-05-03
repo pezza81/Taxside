@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const LandingPage = ({ onGetStarted }) => {
+  const demoFileInputRef = useRef(null);
   const [demoTransactions, setDemoTransactions] = useState([]);
   const [showDemoResults, setShowDemoResults] = useState(false);
   const [showDemoPanel, setShowDemoPanel] = useState(false);
@@ -36,10 +37,22 @@ const LandingPage = ({ onGetStarted }) => {
     .reduce((sum, item) => sum + parseFloat(item.amount || '0'), 0)
     .toFixed(2);
 
+  const handleDemoFile = (file) => {
+    const extension = file.name.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'csv', 'ofx', 'pdf'].includes(extension)) {
+      setDemoTransactions(sampleData);
+      setShowDemoResults(true);
+    } else {
+      alert('Unsupported file format. Please upload JPG, PNG, PDF, CSV, or OFX.');
+    }
+  };
+
   const handleDemoDrop = (e) => {
     e.preventDefault();
-    setDemoTransactions(sampleData);
-    setShowDemoResults(true);
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleDemoFile(files[0]);
+    }
   };
 
   const handleDemoDragOver = (e) => {
@@ -130,11 +143,19 @@ const LandingPage = ({ onGetStarted }) => {
           <div style={styles.demoCard}>
             <div
               style={styles.demoDropZone}
+              onClick={() => demoFileInputRef.current?.click()}
               onDrop={handleDemoDrop}
               onDragOver={handleDemoDragOver}
             >
               <p style={styles.demoDropTitle}>Drop your bank screenshot or CSV here</p>
-              <p style={styles.demoDropHint}>PNG · JPG · CSV · OFX supported</p>
+              <p style={styles.demoDropHint}>PNG · JPG · PDF · CSV · OFX supported</p>
+              <input
+                ref={demoFileInputRef}
+                type="file"
+                onChange={(e) => e.target.files && handleDemoFile(e.target.files[0])}
+                accept=".pdf,.jpg,.jpeg,.png,.csv,.ofx"
+                style={{ display: 'none' }}
+              />
             </div>
             <button style={styles.demoSampleButton} onClick={loadSampleData}>
               Or try with sample data →

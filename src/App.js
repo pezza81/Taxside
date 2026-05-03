@@ -679,6 +679,42 @@ function App() {
     }
   };
 
+  const loadPdfJs = async () => {
+    let pdfjsLib = window.pdfjsLib;
+    if (!pdfjsLib) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.id = 'pdfjs-script';
+      await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+      pdfjsLib = window.pdfjsLib;
+    }
+    if (pdfjsLib && pdfjsLib.GlobalWorkerOptions) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+    return pdfjsLib;
+  };
+
+  const extractTextFromPdf = async (file) => {
+    const pdfjsLib = await loadPdfJs();
+    const arrayBuffer = await file.arrayBuffer();
+    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+    const pdf = await loadingTask.promise;
+    let combinedText = '';
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item) => item.str).join(' ');
+      combinedText += pageText + '\n\n';
+    }
+
+    return combinedText.trim();
+  };
+
   // Handle file selection
   const handleFile = async (file) => {
     setUploadedFile(file);
@@ -689,6 +725,24 @@ function App() {
     if (['jpg', 'jpeg', 'png'].includes(extension)) {
       // Process as image (OCR)
       await ocrImage(file);
+    } else if (extension === 'pdf') {
+      try {
+        const text = await extractTextFromPdf(file);
+        if (!text || text.length < 10) {
+          setOcrError(true);
+          setIsProcessing(false);
+          return;
+        }
+        setExtractedText(text);
+        setShowPreview(true);
+        setExtractionWarning(text.length < 50);
+        setOcrError(null);
+      } catch (error) {
+        console.error('PDF extraction error:', error);
+        setOcrError(true);
+      } finally {
+        setIsProcessing(false);
+      }
     } else if (extension === 'csv') {
       // Process as CSV
       const reader = new FileReader();
@@ -709,7 +763,7 @@ function App() {
       };
       reader.readAsText(file);
     } else {
-      alert('Unsupported file format. Please upload JPG, PNG, CSV, or OFX.');
+      alert('Unsupported file format. Please upload JPG, PNG, PDF, CSV, or OFX.');
       setIsProcessing(false);
     }
   };
@@ -1189,6 +1243,7 @@ function App() {
           <div
             ref={dropZoneRef}
             className="drop-zone"
+            onClick={() => document.getElementById('file-input')?.click()}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -1199,8 +1254,8 @@ function App() {
               <p className="drop-hint">or click to select</p>
               <input
                 type="file"
-                onChange={(e) => handleFile(e.target.files[0])}
-                accept=".jpg,.jpeg,.png,.csv,.ofx"
+                onChange={(e) => e.target.files && handleFile(e.target.files[0])}
+                accept=".pdf,.jpg,.jpeg,.png,.csv,.ofx"
                 style={{ display: 'none' }}
                 id="file-input"
               />
@@ -1208,7 +1263,7 @@ function App() {
                 Choose File
               </label>
               <p className="supported-formats">
-                Supported: JPG, PNG, CSV, OFX
+                Supported: PDF, JPG, PNG, CSV, OFX
               </p>
             </div>
           </div>
