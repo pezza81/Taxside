@@ -115,21 +115,19 @@ const LandingPage = ({ onGetStarted }) => {
     const mimeType = file.type;
 
     try {
-      let extractedText = '';
-
       if (mimeType.startsWith('image/') || ['jpg', 'jpeg', 'png'].includes(extension)) {
-        extractedText = await ocrImage(file);
+        await ocrImage(file);
       } else if (extension === 'pdf') {
-        extractedText = await extractTextFromPdf(file);
+        await extractTextFromPdf(file);
       } else if (extension === 'csv') {
         const reader = new FileReader();
-        extractedText = await new Promise((resolve) => {
+        await new Promise((resolve) => {
           reader.onload = (e) => resolve(parseCSV(e.target.result));
           reader.readAsText(file);
         });
       } else if (['ofx', 'qif'].includes(extension)) {
         const reader = new FileReader();
-        extractedText = await new Promise((resolve) => {
+        await new Promise((resolve) => {
           reader.onload = (e) => resolve(e.target.result);
           reader.readAsText(file);
         });
@@ -138,7 +136,7 @@ const LandingPage = ({ onGetStarted }) => {
         return;
       }
 
-      // After extraction, show sample results
+      // After processing, show sample results
       setDemoTransactions(sampleData);
       setShowDemoResults(true);
     } catch (error) {
