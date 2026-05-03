@@ -37,13 +37,113 @@ const LandingPage = ({ onGetStarted }) => {
     .reduce((sum, item) => sum + parseFloat(item.amount || '0'), 0)
     .toFixed(2);
 
-  const handleDemoFile = (file) => {
+  const loadTesseract = async () => {
+    let Tesseract = window.Tesseract;
+    if (!Tesseract) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js';
+      script.id = 'tesseract-script';
+      await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+      Tesseract = window.Tesseract;
+    }
+    return Tesseract;
+  };
+
+  const loadPdfJs = async () => {
+    let pdfjsLib = window.pdfjsLib;
+    if (!pdfjsLib) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.id = 'pdfjs-script';
+      await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+      pdfjsLib = window.pdfjsLib;
+    }
+    if (pdfjsLib && pdfjsLib.GlobalWorkerOptions) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+    return pdfjsLib;
+  };
+
+  const extractTextFromPdf = async (file) => {
+    const pdfjsLib = await loadPdfJs();
+    const arrayBuffer = await file.arrayBuffer();
+    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+    const pdf = await loadingTask.promise;
+    let combinedText = '';
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item) => item.str).join(' ');
+      combinedText += pageText + '\n\n';
+    }
+
+    return combinedText.trim();
+  };
+
+  const ocrImage = async (file) => {
+    const Tesseract = await loadTesseract();
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.onload = async (e) => {
+        try {
+          const result = await Tesseract.recognize(e.target.result, 'eng');
+          resolve(result.data.text.trim());
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const parseCSV = (text) => {
+    const lines = text.split('\n').filter(line => line.trim());
+    return lines.join('\n');
+  };
+
+  const handleDemoFile = async (file) => {
     const extension = file.name.split('.').pop().toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'csv', 'ofx', 'pdf'].includes(extension)) {
+    const mimeType = file.type;
+
+    try {
+      let extractedText = '';
+
+      if (mimeType.startsWith('image/') || ['jpg', 'jpeg', 'png'].includes(extension)) {
+        extractedText = await ocrImage(file);
+      } else if (extension === 'pdf') {
+        extractedText = await extractTextFromPdf(file);
+      } else if (extension === 'csv') {
+        const reader = new FileReader();
+        extractedText = await new Promise((resolve) => {
+          reader.onload = (e) => resolve(parseCSV(e.target.result));
+          reader.readAsText(file);
+        });
+      } else if (['ofx', 'qif'].includes(extension)) {
+        const reader = new FileReader();
+        extractedText = await new Promise((resolve) => {
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsText(file);
+        });
+      } else {
+        alert('Unsupported file format. Please upload an image, PDF, CSV, OFX, or QIF.');
+        return;
+      }
+
+      // After extraction, show sample results
       setDemoTransactions(sampleData);
       setShowDemoResults(true);
-    } else {
-      alert('Unsupported file format. Please upload JPG, PNG, PDF, CSV, or OFX.');
+    } catch (error) {
+      console.error('File processing error:', error);
+      alert('Failed to process the file. Please try again.');
     }
   };
 
@@ -148,12 +248,12 @@ const LandingPage = ({ onGetStarted }) => {
               onDragOver={handleDemoDragOver}
             >
               <p style={styles.demoDropTitle}>Drop your bank screenshot or CSV here</p>
-              <p style={styles.demoDropHint}>PNG · JPG · PDF · CSV · OFX supported</p>
+              <p style={styles.demoDropHint}>Screenshot · PDF · CSV · OFX*</p>
               <input
                 ref={demoFileInputRef}
                 type="file"
                 onChange={(e) => e.target.files && handleDemoFile(e.target.files[0])}
-                accept=".pdf,.jpg,.jpeg,.png,.csv,.ofx"
+                accept="image/, .pdf, .csv, .ofx, .qif"
                 style={{ display: 'none' }}
               />
             </div>
